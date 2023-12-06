@@ -74,6 +74,10 @@
 #define BINARYEN_REF(NAME) typedef struct Binaryen##NAME* Binaryen##NAME##Ref;
 #endif
 
+#ifndef BINARYEN_MALLOC
+#define BINARYEN_MALLOC malloc
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif

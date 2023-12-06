@@ -43,13 +43,6 @@
 
 using namespace wasm;
 
-#ifndef BINARYEN_MALLOC
-#define BINARYEN_MALLOC malloc
-#endif
-
-#ifndef BINARYEN_FREE
-#define BINARYEN_FREE free
-#endif
 
 // Literal utilities
 
