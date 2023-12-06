@@ -6,7 +6,7 @@ pub fn build(b: *std.Build) void {
     const assertions = b.option(bool, "assertions", "Enable assertions (default: true)") orelse true;
     const dwarf = b.option(bool, "dwarf", "Enable full DWARF support") orelse false;
 
-    const lib = b.addExecutable(.{
+    const lib = b.addStaticLibrary(.{
         .name = "binaryen",
         .target = target,
         .optimize = optimize,
@@ -19,11 +19,11 @@ pub fn build(b: *std.Build) void {
     lib.addIncludePath(.{ .path = "src" });
     if (dwarf) {
         lib.defineCMacro("BUILD_LLVM_DWARF", null);
-        lib.addIncludePath(.{ .path = "third_party/llvm-project/include" });
     }
     if (!assertions) {
         lib.defineCMacro("NDEBUG", null);
     }
+    lib.addIncludePath(.{ .path = "C:/Development/zelosfarm/zig+llvm+lld+clang-x86_64-windows-gnu-0.11.0-dev.1869+df4cfc2ec/include" });
 
     const flags: []const []const u8 = &.{
         "-std=c++17",
@@ -88,6 +88,10 @@ pub fn build(b: *std.Build) void {
         "src/emscripten-optimizer/optimizer-shared.cpp",
         "src/emscripten-optimizer/parser.cpp",
         "src/emscripten-optimizer/simple_ast.cpp",
+    }, .flags = flags });
+
+    lib.addCSourceFiles(.{ .files = &.{
+        "src/analysis/cfg.cpp",
     }, .flags = flags });
 
     lib.addCSourceFiles(.{ .files = &.{
@@ -191,6 +195,16 @@ pub fn build(b: *std.Build) void {
         "src/passes/SSAify.cpp",
         "src/passes/Untee.cpp",
         "src/passes/Vacuum.cpp",
+        "src/passes/Outlining.cpp",
+        "src/passes/SeparateDataSegments.cpp",
+        "src/passes/StripEH.cpp",
+        "src/passes/TupleOptimization.cpp",
+        "src/passes/TypeFinalizing.cpp",
+        "src/passes/Unsubtyping.cpp",
+        "src/passes/TypeGeneralizing.cpp",
+        "src/passes/RemoveNonJSOps.cpp",
+        "src/passes/WasmIntrinsics.cpp",
+        "src/passes/hash-stringify-walker.cpp",
     }, .flags = flags });
 
     lib.addCSourceFiles(.{
@@ -219,6 +233,7 @@ pub fn build(b: *std.Build) void {
         "src/wasm/wasm-emscripten.cpp",
         "src/wasm/wasm-interpreter.cpp",
         "src/wasm/wasm-io.cpp",
+        "src/wasm/wasm-ir-builder.cpp",
         "src/wasm/wasm-s-parser.cpp",
         "src/wasm/wasm-stack.cpp",
         "src/wasm/wasm-type.cpp",
