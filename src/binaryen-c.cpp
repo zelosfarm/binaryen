@@ -43,6 +43,14 @@
 
 using namespace wasm;
 
+#ifndef BINARYEN_MALLOC
+#define BINARYEN_MALLOC malloc
+#endif
+
+#ifndef BINARYEN_FREE
+#define BINARYEN_FREE free
+#endif
+
 // Literal utilities
 
 static_assert(sizeof(BinaryenLiteral) == sizeof(Literal),
@@ -5770,13 +5778,13 @@ BinaryenModuleAllocateAndWrite(BinaryenModuleRef module,
     writer.setSourceMap(&os, sourceMapUrl);
   }
   writer.write();
-  void* binary = malloc(buffer.size());
+  void* binary = BINARYEN_MALLOC(buffer.size());
   std::copy_n(buffer.begin(), buffer.size(), static_cast<char*>(binary));
   char* sourceMap = nullptr;
   if (sourceMapUrl) {
     auto str = os.str();
     const size_t len = str.length() + 1;
-    sourceMap = (char*)malloc(len);
+    sourceMap = (char*)BINARYEN_MALLOC(len);
     std::copy_n(str.c_str(), len, sourceMap);
   }
   return {binary, buffer.size(), sourceMap};
@@ -5792,7 +5800,7 @@ char* BinaryenModuleAllocateAndWriteText(BinaryenModuleRef module) {
 
   auto str = os.str();
   const size_t len = str.length() + 1;
-  char* output = (char*)malloc(len);
+  char* output = (char*)BINARYEN_MALLOC(len);
   std::copy_n(str.c_str(), len, output);
   return output;
 }
@@ -5808,7 +5816,7 @@ char* BinaryenModuleAllocateAndWriteStackIR(BinaryenModuleRef module,
 
   auto str = os.str();
   const size_t len = str.length() + 1;
-  char* output = (char*)malloc(len);
+  char* output = (char*)BINARYEN_MALLOC(len);
   std::copy_n(str.c_str(), len, output);
   return output;
 }

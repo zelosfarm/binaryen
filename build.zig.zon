@@ -1,0 +1,10 @@
+.{
+    .name = "binaryen",
+    .version = "0.0.116",
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "src",
+    },
+    .dependencies = .{},
+}

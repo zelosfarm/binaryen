@@ -50,3 +50,6 @@ test/lit/lit.site.cfg.py
 
 # files related to clangd cache
 .cache/*
+
+zig-cache/*
+zig-out/*
